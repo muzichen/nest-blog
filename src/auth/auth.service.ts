@@ -5,8 +5,8 @@ import LoginUserDto from './login-user.dto';
 import RegisterUserDto from './register-user.dto';
 
 import * as bcrypt from 'bcrypt';
-import { UserDocument } from 'src/users/user.schema';
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/user.schema';
+// import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -15,12 +15,10 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async createUser(
-    registerUserData: RegisterUserDto,
-  ): Promise<User | undefined> {
+  async createUser(registerUserData: RegisterUserDto): Promise<User> {
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(registerUserData.password, salt);
-    const user = this.usersService.create({
+    const user = await this.usersService.create({
       ...registerUserData,
       password: hashPassword,
     });

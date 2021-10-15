@@ -1,6 +1,7 @@
 import { IsBoolean, IsEmail, IsString, Length } from 'class-validator';
-import { Column, ObjectID, ObjectIdColumn } from 'typeorm';
+import { Entity, Column, ObjectID, ObjectIdColumn } from 'typeorm';
 
+@Entity()
 export class User {
   @ObjectIdColumn()
   id: ObjectID;
