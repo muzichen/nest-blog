@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { User } from 'src/users/user.entity';
 import { UserDocument } from 'src/users/user.schema';
 import { UsersService } from 'src/users/users.service';
 import TokenPlayload from './tokenPlayload.interface';
@@ -19,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: TokenPlayload): Promise<UserDocument | undefined> {
+  async validate(payload: TokenPlayload): Promise<User> {
     // Passport will build a user object based on the return value of our validate() method, and attach it as a property on the Request object.
     return this.userService.findById(payload.userId);
   }

@@ -14,9 +14,9 @@ export default class CreateUserDto {
   @IsString()
   password: string;
 
-  @IsNotEmpty()
-  @IsString()
-  salt: string;
+  // @IsNotEmpty()
+  // @IsString()
+  // salt: string;
 
   @IsBoolean()
   isAdmin?: boolean;
