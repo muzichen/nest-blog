@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import RequestWithUser from 'src/auth/requestWithUser.interface';
+import RolesGuard from 'src/auth/roles.guard';
 import CreatePostDto from './create-post.dto';
 import { Post as PostSchema } from './post.schema';
 import { PostService } from './post.service';
@@ -28,6 +29,7 @@ export class PostController {
   }
 
   @Post('new')
+  @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   async create(
     @Body() createPostDto: CreatePostDto,
