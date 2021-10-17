@@ -22,6 +22,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: TokenPlayload): Promise<User> {
     // Passport will build a user object based on the return value of our validate() method, and attach it as a property on the Request object.
-    return this.userService.findById(payload.userId);
+    return this.userService.findByEmail(payload.email);
   }
 }

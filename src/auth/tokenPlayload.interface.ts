@@ -1,4 +1,4 @@
 export default interface TokenPlayload {
-  userId: string;
+  email: string;
   userName: string;
 }
