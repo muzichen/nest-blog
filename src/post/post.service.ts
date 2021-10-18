@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/users/user.schema';
@@ -30,6 +30,9 @@ export class PostService {
 
   async getPostById(id: string): Promise<Post> {
     const post = this.postModel.findById(id);
+    if (!post) {
+      throw new NotFoundException('No post found.');
+    }
     return post;
   }
 

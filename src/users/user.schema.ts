@@ -3,7 +3,9 @@ import { Exclude } from 'class-transformer';
 import { Document, ObjectId } from 'mongoose';
 
 export type UserDocument = User & Document;
-@Schema()
+@Schema({
+  timestamps: true,
+})
 export class User {
   @Prop({ required: true })
   userName: string;
