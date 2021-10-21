@@ -1,11 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { IsEmail, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 
 export type CommentDocument = Comment & Document;
 
 export class CommentAuthor {
+  @IsString()
   name: string;
+  @IsString()
+  @IsEmail()
   email: string;
+  @IsString()
   site: string;
 }
 

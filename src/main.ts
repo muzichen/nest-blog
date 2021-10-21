@@ -10,6 +10,7 @@ async function bootstrap() {
   //     strategy: 'exposeAll',
   //   }),
   // );
+  app.enableCors();
   await app.listen(3000);
 }
 bootstrap();

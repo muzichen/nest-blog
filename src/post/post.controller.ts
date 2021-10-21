@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Param,
   Post,
   Req,
@@ -18,6 +19,7 @@ import { PostService } from './post.service';
 export class PostController {
   constructor(private postService: PostService) {}
 
+  @HttpCode(200)
   @Get()
   async getAllPosts(): Promise<PostSchema[]> {
     return this.postService.getAllPosts();

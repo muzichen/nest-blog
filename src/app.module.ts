@@ -21,6 +21,8 @@ import { CommentsModule } from './comments/comments.module';
         MONGO_PORT: Joi.number().required().default(27017),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION: Joi.number().required().default(3600),
+        REFRESH_SECRET: Joi.string().required(),
+        REFRESH_EXPIRATION: Joi.string().required(),
       }),
     }),
     MongooseModule.forRootAsync({

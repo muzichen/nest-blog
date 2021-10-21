@@ -14,14 +14,15 @@ export class User {
   @Prop({ required: true })
   password: string;
 
-  // @Prop({ required: true })
-  // salt: string;
-
   @Prop({ required: true, unique: true })
   email: string;
 
   @Prop({ default: false })
   isAdmin: boolean;
+
+  @Exclude()
+  @Prop()
+  currentHashedRefreshToken?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
