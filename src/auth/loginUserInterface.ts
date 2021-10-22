@@ -1,7 +1,10 @@
 import { User } from 'src/users/user.schema';
 
-export default interface ILoginUser {
+export interface RefreshUser {
   user: User;
   token: string;
+}
+
+export interface LoginUser extends RefreshUser {
   refreshToken: string;
 }

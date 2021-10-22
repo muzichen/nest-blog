@@ -12,7 +12,7 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
 import RegisterUserDto from './register-user.dto';
 import RequestWithUser from './requestWithUser.interface';
-import ILoginUser from './loginUserInterface';
+import { LoginUser, RefreshUser } from './loginUserInterface';
 import { UsersService } from 'src/users/users.service';
 import { RefreshTokenGuard } from './refresh-token.guard';
 
@@ -32,7 +32,7 @@ export class AuthController {
   @HttpCode(200)
   // @UseInterceptors(MongooseInterceptor(UserWithToken))
   @Post('login')
-  async login(@Req() req: RequestWithUser): Promise<ILoginUser> {
+  async login(@Req() req: RequestWithUser): Promise<LoginUser> {
     // 当local strategy验证过后会把validate的返回数据放到request对象上
     const user = req.user.toJSON();
     const token = await this.authService.createJwt({
@@ -51,15 +51,22 @@ export class AuthController {
     return { user, token, refreshToken };
   }
 
+  /**
+   * https://www.rfc-editor.org/rfc/rfc6749#section-1.5
+   * @param req Request
+   * @returns RefreshUser
+   */
   @UseGuards(RefreshTokenGuard)
   @Get('refresh')
-  async refreshToken(@Req() req: RequestWithUser): Promise<void> {
-    const user = req.user;
-    const accessToken = this.authService.createJwt({
+  async refreshToken(@Req() req: RequestWithUser): Promise<RefreshUser> {
+    const user = req.user.toJSON(); // refreshToken验证通过后会讲返回的user对象放到request对象上
+    const accessToken = await this.authService.createJwt({
       _id: user._id,
       email: user.email,
       userName: user.userName,
-    });
-    // return { user, acce }
+    }); // 重新生成新的accessToken
+    delete user.password;
+    delete user.currentHashedRefreshToken;
+    return { user, token: accessToken };
   }
 }

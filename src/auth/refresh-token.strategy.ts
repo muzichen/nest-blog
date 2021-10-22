@@ -10,7 +10,7 @@ import TokenPlayload from './tokenPlayload.interface';
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
-  'refresh-token',
+  'refreshToken',
 ) {
   constructor(
     private configService: ConfigService,
@@ -21,12 +21,11 @@ export class RefreshTokenStrategy extends PassportStrategy(
       secretOrKey: configService.get('REFRESH_SECRET'),
       passReqToCallback: true, // If true the request will be passed to the verify callback
     });
-    console.log(123);
   }
 
   async validate(request: Request, payload: TokenPlayload): Promise<User> {
+    console.log('This is validate');
     const refreshToken = request.body?.refresh_token; // 从body中拿到refresh_token
-    console.log(refreshToken);
     if (!refreshToken) return null;
     return this.usersService.getUserIfRefreshTokenIsValid(
       refreshToken,
