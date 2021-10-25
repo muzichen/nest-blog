@@ -21,6 +21,7 @@ export function MongooseInterceptor(
     transfromToObject(
       response: PlainLiteralObject | Array<PlainLiteralObject>,
     ): PlainLiteralObject | Array<PlainLiteralObject> {
+      console.log(response, response instanceof Document);
       if (Array.isArray(response)) {
         return response.map(this.handleResponse);
       }
@@ -31,7 +32,7 @@ export function MongooseInterceptor(
       response: PlainLiteralObject | Array<PlainLiteralObject>,
       options: ClassTransformOptions,
     ) {
-      console.log(response, 'xxx');
+      console.log('xxxxxxxxx');
       return super.serialize(this.transfromToObject(response), options);
     }
   };

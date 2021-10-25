@@ -7,7 +7,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-// import { User } from 'src/users/user.entity';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
 import RegisterUserDto from './register-user.dto';
@@ -30,7 +29,6 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @HttpCode(200)
-  // @UseInterceptors(MongooseInterceptor(UserWithToken))
   @Post('login')
   async login(@Req() req: RequestWithUser): Promise<LoginUser> {
     // 当local strategy验证过后会把validate的返回数据放到request对象上
@@ -47,7 +45,6 @@ export class AuthController {
       userName: user.userName,
     });
     this.usersService.updateUserRefreshToken(refreshToken, user._id);
-    delete user.password;
     return { user, token, refreshToken };
   }
 

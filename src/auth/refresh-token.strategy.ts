@@ -24,7 +24,6 @@ export class RefreshTokenStrategy extends PassportStrategy(
   }
 
   async validate(request: Request, payload: TokenPlayload): Promise<User> {
-    console.log('This is validate');
     const refreshToken = request.body?.refresh_token; // 从body中拿到refresh_token
     if (!refreshToken) return null;
     return this.usersService.getUserIfRefreshTokenIsValid(
