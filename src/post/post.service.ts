@@ -1,20 +1,32 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { CommentsService } from 'src/comments/comments.service';
 import { User } from 'src/users/user.schema';
 import CreatePostDto from './create-post.dto';
 import { Post, PostDocument } from './post.schema';
+import { PostWithComments } from './types';
 
 @Injectable()
 export class PostService {
-  constructor(@InjectModel(Post.name) private postModel: Model<PostDocument>) {}
+  constructor(
+    @InjectModel(Post.name) private postModel: Model<PostDocument>,
+    private commentsService: CommentsService,
+  ) {}
 
-  async getAllPosts(): Promise<Post[]> {
+  async getAllPosts(): Promise<PostWithComments[]> {
     try {
       const posts = await this.postModel.find().sort({
         createdAt: -1,
       });
-      return posts;
+      return posts.map(async (post) => {
+        const { _id } = post;
+        const commentsCount = (await this.commentsService.getComments({ postId: _id })).length;
+        return {
+          post: post,
+          commentsCount,
+        };
+      });
     } catch (err) {
       throw new Error(err);
     }
