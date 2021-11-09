@@ -17,12 +17,14 @@ import { RefreshTokenStrategy } from './refresh-token.strategy';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET'),
-        signOptions: {
-          expiresIn: `${configService.get('JWT_EXPIRATION')}s`,
-        },
-      }),
+      useFactory: async (configService: ConfigService) => {
+        return {
+          secret: configService.get('JWT_SECRET'),
+          signOptions: {
+            expiresIn: configService.get('JWT_EXPIRATION'),
+          },
+        };
+      },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy, RefreshTokenStrategy],

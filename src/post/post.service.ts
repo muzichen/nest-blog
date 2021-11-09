@@ -16,17 +16,21 @@ export class PostService {
 
   async getAllPosts(): Promise<PostWithComments[]> {
     try {
-      const posts = await this.postModel.find().sort({
-        createdAt: -1,
-      });
-      return posts.map(async (post) => {
-        const { _id } = post;
-        const commentsCount = (await this.commentsService.getComments({ postId: _id })).length;
-        return {
-          post: post,
-          commentsCount,
-        };
-      });
+      const posts = await this.postModel
+        .find()
+        .sort({
+          createdAt: -1,
+        })
+        .populate('author', 'userName');
+      return Promise.all(
+        posts.map(async (post) => {
+          const commentsCount = await this.commentsService.getCommentsCount(
+            post._id,
+          );
+          return { ...post.toObject(), commentsCount };
+        }),
+      );
+      // return posts;
     } catch (err) {
       throw new Error(err);
     }

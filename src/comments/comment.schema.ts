@@ -1,8 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsEmail, IsString } from 'class-validator';
-import { Document } from 'mongoose';
+import mongoose from 'mongoose';
+import { Post } from 'src/post/post.schema';
 
-export type CommentDocument = Comment & Document;
+export type CommentDocument = Comment & mongoose.Document;
 
 export class CommentAuthor {
   @IsString()
@@ -17,12 +18,14 @@ export class CommentAuthor {
 @Schema({
   timestamps: true,
 })
-export class Comment extends Document {
+export class Comment extends mongoose.Document {
   // 评论的文章
   @Prop({
     required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: Post.name,
   })
-  post_id: string;
+  post: string;
   // 评论内容
   @Prop({
     required: true,

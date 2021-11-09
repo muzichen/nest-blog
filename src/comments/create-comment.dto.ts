@@ -3,7 +3,7 @@ import { CommentAuthor } from './comment.schema';
 
 export default class CreateCommentDto {
   @IsString()
-  post_id: string;
+  post: string;
   @IsString()
   content: string;
   @IsString()

@@ -14,6 +14,7 @@ import RolesGuard from 'src/auth/roles.guard';
 import CreatePostDto from './create-post.dto';
 import { Post as PostSchema } from './post.schema';
 import { PostService } from './post.service';
+import { PostWithComments } from './types';
 
 @Controller('post')
 export class PostController {
@@ -21,8 +22,9 @@ export class PostController {
 
   @HttpCode(200)
   @Get()
-  async getAllPosts(): Promise<PostSchema[]> {
-    return this.postService.getAllPosts();
+  async getAllPosts(): Promise<PostWithComments[]> {
+    const posts = await this.postService.getAllPosts();
+    return posts;
   }
 
   @Get(':id')

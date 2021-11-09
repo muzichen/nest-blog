@@ -44,7 +44,7 @@ export class AuthService {
   async createRefreshToken(loginUserDto: LoginUserDto): Promise<string> {
     return this.jwtService.sign(loginUserDto, {
       secret: this.configService.get('REFRESH_SECRET'),
-      expiresIn: `${this.configService.get('REFRESH_EXPIRATION')}s`,
+      expiresIn: this.configService.get('REFRESH_EXPIRATION'),
     });
   }
 }

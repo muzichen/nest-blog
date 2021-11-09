@@ -13,13 +13,13 @@ export class CommentsService {
 
   async getComments({ postId }: FilterCommentDto): Promise<Comment[]> {
     return await this.commentModel.find({
-      post_id: postId,
+      post: postId,
     });
   }
 
   async getCommentsCount({ postId }: FilterCommentDto): Promise<number> {
     return await this.commentModel.count({
-      post_id: postId,
+      post: postId,
     });
   }
   /**
