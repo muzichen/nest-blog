@@ -18,7 +18,7 @@ export class CommentsService {
   }
 
   async getCommentsCount({ postId }: FilterCommentDto): Promise<number> {
-    return await this.commentModel.count({
+    return await this.commentModel.countDocuments({
       post: postId,
     });
   }

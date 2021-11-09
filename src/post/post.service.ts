@@ -24,9 +24,9 @@ export class PostService {
         .populate('author', 'userName');
       return Promise.all(
         posts.map(async (post) => {
-          const commentsCount = await this.commentsService.getCommentsCount(
-            post._id,
-          );
+          const commentsCount = await this.commentsService.getCommentsCount({
+            postId: post._id,
+          });
           return { ...post.toObject(), commentsCount };
         }),
       );
