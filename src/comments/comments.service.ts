@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Comment, CommentDocument } from './comment.schema';
@@ -34,7 +34,25 @@ export class CommentsService {
   // }
 
   async create(createCommentDto: CreateCommentDto): Promise<Comment> {
+    if (!createCommentDto.parentId) {
+      // root comment
+      const newComment = await this.commentModel.create(createCommentDto);
+      // 如果不是回复的话
+      newComment.path = `${newComment._id}`;
+      return newComment.save();
+    }
+    // not root comment
+    const parentComment = await this.commentModel.findById(
+      createCommentDto.parentId,
+    );
+    if (!parentComment) {
+      throw new NotFoundException(
+        `Not found ${createCommentDto.parentId} comment.`,
+      );
+    }
     const newComment = await this.commentModel.create(createCommentDto);
+    // 如果是回复
+    newComment.path = `${parentComment.path},${newComment._id}`;
     return newComment.save();
   }
 }
