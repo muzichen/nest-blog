@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { Comment } from './comment.schema';
 import { CommentsService } from './comments.service';
 import CreateCommentDto from './create-comment.dto';
@@ -10,9 +10,10 @@ export class CommentsController {
 
   @Get()
   async getComments(@Query() query: FilterCommentDto): Promise<Comment[]> {
-    return this.commentsService.getComments({
+    const comments = this.commentsService.getComments({
       ...query,
     });
+    return comments;
   }
 
   // @Get(':postId')

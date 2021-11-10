@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CommentsService } from 'src/comments/comments.service';
 import { User } from 'src/users/user.schema';
 import CreatePostDto from './create-post.dto';
+import GetPostsDto from './get-posts.dto';
 import { Post, PostDocument } from './post.schema';
 import { PostWithComments } from './types';
 
@@ -14,13 +15,18 @@ export class PostService {
     private commentsService: CommentsService,
   ) {}
 
-  async getAllPosts(): Promise<PostWithComments[]> {
+  async getAllPosts({
+    currentPage,
+    pageSize,
+  }: GetPostsDto): Promise<PostWithComments[]> {
     try {
       const posts = await this.postModel
         .find()
         .sort({
           createdAt: -1,
         })
+        .skip(currentPage > 0 ? (currentPage - 1) * pageSize : 0) // 使用skip对性能会有影响 https://docs.mongodb.com/manual/reference/method/cursor.skip/#cursor.skip
+        .limit(pageSize)
         .populate('author', 'userName');
       return Promise.all(
         posts.map(async (post) => {
@@ -45,7 +51,9 @@ export class PostService {
   }
 
   async getPostById(id: string): Promise<Post> {
-    const post = this.postModel.findById(id);
+    const post = await this.postModel
+      .findById(id)
+      .populate('author', 'userName');
     if (!post) {
       throw new NotFoundException('No post found.');
     }

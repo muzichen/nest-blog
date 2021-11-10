@@ -11,10 +11,22 @@ export class CommentsService {
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
   ) {}
 
+  private formatCommentsTree(comments: Comment[]): void {
+    comments.forEach((comment) => {
+      const pt = comment.path.split(',');
+      if (pt.length > 1) {
+        // 说明是回复
+        // const parentComment =
+      }
+    });
+  }
+
   async getComments({ postId }: FilterCommentDto): Promise<Comment[]> {
-    return await this.commentModel.find({
+    const comments = await this.commentModel.find({
       post: postId,
     });
+
+    return comments;
   }
 
   async getCommentsCount({ postId }: FilterCommentDto): Promise<number> {
