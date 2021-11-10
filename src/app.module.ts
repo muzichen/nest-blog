@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PostModule } from './post/post.module';
 import { CommentsModule } from './comments/comments.module';
+import { EventsModule } from './events/events.module';
+import { EventsGateway } from './events.gateway';
 
 @Module({
   imports: [
@@ -46,8 +48,9 @@ import { CommentsModule } from './comments/comments.module';
     AuthModule,
     PostModule,
     CommentsModule,
+    EventsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EventsGateway],
 })
 export class AppModule {}
