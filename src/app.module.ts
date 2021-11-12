@@ -10,7 +10,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PostModule } from './post/post.module';
 import { CommentsModule } from './comments/comments.module';
 import { EventsModule } from './events/events.module';
-import { EventsGateway } from './events.gateway';
+import { WebsocketModule } from './websocket/websocket.module';
 
 @Module({
   imports: [
@@ -49,8 +49,9 @@ import { EventsGateway } from './events.gateway';
     PostModule,
     CommentsModule,
     EventsModule,
+    WebsocketModule,
   ],
   controllers: [AppController],
-  providers: [AppService, EventsGateway],
+  providers: [AppService],
 })
 export class AppModule {}
