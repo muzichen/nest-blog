@@ -11,15 +11,15 @@ export class CommentsService {
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
   ) {}
 
-  private formatCommentsTree(comments: Comment[]): void {
-    comments.forEach((comment) => {
-      const pt = comment.path.split(',');
-      if (pt.length > 1) {
-        // 说明是回复
-        // const parentComment =
-      }
-    });
-  }
+  // private formatCommentsTree(comments: Comment[]): void {
+  //   comments.forEach((comment) => {
+  //     const pt = comment.path.split(',');
+  //     if (pt.length > 1) {
+  //       // 说明是回复
+  //       // const parentComment =
+  //     }
+  //   });
+  // }
 
   async getComments({ postId }: FilterCommentDto): Promise<Comment[]> {
     const comments = await this.commentModel.find({
@@ -50,7 +50,7 @@ export class CommentsService {
       // root comment
       const newComment = await this.commentModel.create(createCommentDto);
       // 如果不是回复的话
-      newComment.path = `${newComment._id}`;
+      newComment.path.push(newComment._id);
       return newComment.save();
     }
     // not root comment
@@ -64,7 +64,8 @@ export class CommentsService {
     }
     const newComment = await this.commentModel.create(createCommentDto);
     // 如果是回复
-    newComment.path = `${parentComment.path},${newComment._id}`;
+    parentComment.path.push(newComment._id);
+    newComment.path = [...parentComment.path];
     return newComment.save();
   }
 }

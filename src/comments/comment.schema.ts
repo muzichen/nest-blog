@@ -33,7 +33,7 @@ export class Comment extends mongoose.Document {
   content: string;
   // 层级path
   @Prop()
-  path: string;
+  path: string[];
 
   @Prop()
   author: CommentAuthor;

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -10,14 +11,16 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { PaginateResult } from 'mongoose';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import RequestWithUser from 'src/auth/requestWithUser.interface';
 import RolesGuard from 'src/auth/roles.guard';
 import CreatePostDto from './create-post.dto';
 import GetPostsDto from './get-posts.dto';
-import { Post as PostSchema } from './post.schema';
+import PostLikeDto from './post-like.dto';
+import { Post as PostSchema, PostDocument } from './post.schema';
 import { PostService } from './post.service';
-import { PostWithComments } from './types';
+// import { PostWithComments } from './types';
 
 @Controller('post')
 export class PostController {
@@ -25,13 +28,13 @@ export class PostController {
 
   @HttpCode(200)
   @Get()
-  async getAllPosts(
-    @Query('pageSize', ParseIntPipe) pageSize: number,
-    @Query('currentPage', ParseIntPipe) currentPage: number,
-  ): Promise<PostWithComments[]> {
-    const posts = await this.postService.getAllPosts({
+  async getPosts(
+    @Query() { pageSize, currentPage, tag }: GetPostsDto,
+  ): Promise<PaginateResult<PostDocument> | void> {
+    const posts = await this.postService.getPosts({
       pageSize,
       currentPage,
+      tag,
     });
     return posts;
   }
@@ -49,5 +52,18 @@ export class PostController {
     @Req() req: RequestWithUser,
   ): Promise<PostSchema> {
     return this.postService.createPost(createPostDto, req.user);
+  }
+
+  @Post('like')
+  // @UseGuards(JwtAuthGuard) like 不用登录
+  async like(@Body() { post_id }: PostLikeDto): Promise<boolean> {
+    try {
+      this.postService.postLike({
+        post_id,
+      });
+      return true;
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
   }
 }

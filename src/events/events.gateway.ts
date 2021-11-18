@@ -6,9 +6,7 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
 } from '@nestjs/websockets';
-import { from, map, Observable } from 'rxjs';
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({

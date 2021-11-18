@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export default class GetPostsDto {
   @IsOptional()
@@ -7,4 +7,7 @@ export default class GetPostsDto {
   @IsOptional()
   @IsNumber()
   currentPage?: number;
+  @IsOptional()
+  @IsString()
+  tag?: string;
 }

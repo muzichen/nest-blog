@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { User } from 'src/users/user.schema';
+import mongoosePaginate from 'mongoose-paginate-v2';
 import * as mongoose from 'mongoose';
 
 export type PostDocument = Post & Document;
@@ -25,7 +26,9 @@ export class Post {
   @Prop()
   views: number;
   // 喜欢数
-  @Prop()
+  @Prop({
+    default: 0,
+  })
   likes: number;
   // 文章作者
   @Prop({
@@ -37,3 +40,5 @@ export class Post {
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
+
+PostSchema.plugin(mongoosePaginate);
