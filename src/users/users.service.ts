@@ -10,7 +10,6 @@ import * as bcrypt from 'bcrypt';
 import CreateUserDto from './create-user.dto';
 // import { User } from './user.entity';
 import { User, UserDocument } from './user.schema';
-import { MongooseInterceptor } from 'src/mongoose.interceptor';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +20,6 @@ export class UsersService {
     return newUser.save();
   }
 
-  @UseInterceptors(MongooseInterceptor(User))
   async findByEmail(email: string): Promise<User> {
     const user = await this.userModel.findOne({ email });
     return user;

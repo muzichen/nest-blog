@@ -11,6 +11,7 @@ export function MongooseInterceptor(
 ): typeof ClassSerializerInterceptor {
   return class Interceptor extends ClassSerializerInterceptor {
     handleResponse(document: PlainLiteralObject | Document) {
+      console.log('document', document);
       if (!(document instanceof Document)) {
         // 如果document不是mongoose的Document类型，则直接返回
         return document;
@@ -21,7 +22,6 @@ export function MongooseInterceptor(
     transfromToObject(
       response: PlainLiteralObject | Array<PlainLiteralObject>,
     ): PlainLiteralObject | Array<PlainLiteralObject> {
-      console.log(response, response instanceof Document);
       if (Array.isArray(response)) {
         return response.map(this.handleResponse);
       }
@@ -32,7 +32,6 @@ export function MongooseInterceptor(
       response: PlainLiteralObject | Array<PlainLiteralObject>,
       options: ClassTransformOptions,
     ) {
-      console.log('xxxxxxxxx');
       return super.serialize(this.transfromToObject(response), options);
     }
   };

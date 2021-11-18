@@ -6,6 +6,7 @@ import {
   Post,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
@@ -14,6 +15,8 @@ import RequestWithUser from './requestWithUser.interface';
 import { LoginUser, RefreshUser } from './loginUserInterface';
 import { UsersService } from 'src/users/users.service';
 import { RefreshTokenGuard } from './refresh-token.guard';
+import { MongooseInterceptor } from 'src/mongoose.interceptor';
+import { User } from 'src/users/user.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -21,6 +24,12 @@ export class AuthController {
     private authService: AuthService,
     private usersService: UsersService,
   ) {}
+
+  @UseInterceptors(MongooseInterceptor(User))
+  @Get()
+  async test() {
+    return 123;
+  }
 
   @Post('register')
   async register(@Body() registerData: RegisterUserDto) {
@@ -45,6 +54,8 @@ export class AuthController {
       userName: user.userName,
     });
     this.usersService.updateUserRefreshToken(refreshToken, user._id);
+    delete user.password;
+    delete user.currentHashedRefreshToken;
     return { user, token, refreshToken };
   }
 
